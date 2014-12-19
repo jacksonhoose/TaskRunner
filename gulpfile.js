@@ -9,7 +9,7 @@ var minifyCSS = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var browserify = require('gulp-browserify');
-var source = require('vinyl-source-stream');
+var rename = require('gulp-rename');
 
 var paths = {
 	src: {
@@ -33,10 +33,8 @@ var handleError = function(err) {
 
 gulp.task('browserify', function(){
 	return gulp.src(paths.src.js + '/app.js')
-		.pipe(browserify({
-			insertGlobals: true
-		}))
-		.pipe(source('app.bundled.js'))
+		.pipe(browserify())
+		.pipe(rename('app.bundled.js'))
 		.pipe(gulp.dest(paths.src.js));
 });
 
