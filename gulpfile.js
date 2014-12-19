@@ -9,6 +9,7 @@ var minifyCSS = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var browserify = require('gulp-browserify');
+var source = require('vinyl-source-stream');
 
 var paths = {
 	src: {
@@ -57,7 +58,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('image', function() {
-	return gulp.src(paths.img.src + '/**/*')
+	return gulp.src(paths.src.img + '/**/*')
 		.pipe(image())
 		.on('error', handleError)
 		.pipe(gulp.dest(paths.dist.img));

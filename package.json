@@ -26,6 +26,7 @@
     "karma-chai": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.4",
     "gulp-browserify": "~0.5.0",
-    "gulp-jshint": "~1.9.0"
+    "gulp-jshint": "~1.9.0",
+    "vinyl-source-stream": "~1.0.0"
   }
 }
