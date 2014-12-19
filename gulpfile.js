@@ -12,15 +12,15 @@ var browserify = require('gulp-browserify');
 
 var paths = {
 	src: {
-		bower: 'src/bower_components',
-		js: 'src/js',
-		scss: 'src/scss',
-		img: 'src/img'
+		bower: './src/bower_components',
+		js: './src/js',
+		scss: './src/scss',
+		img: './src/img'
 	},
 	dist: {
-		js: 'dist/js',
-		css: 'dist/css',
-		img: 'dist/img'
+		js: './dist/js',
+		css: './dist/css',
+		img: './dist/img'
 	},
 	karmaConf: __dirname + '/karma.conf.js'
 };
