@@ -8,19 +8,18 @@ var compass = require('gulp-compass');
 var minifyCSS = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
+var browserify = require('gulp-browserify');
 
 var paths = {
-	watch: {
-		
-	},
 	src: {
+		bower: 'src/js/bower_components',
 		js: 'src/js',
 		scss: 'src/scss',
 		img: 'src/img'
 	},
 	dist: {
-		js: 'dist/js'
-		css: 'dist/css'
+		js: 'dist/js',
+		css: 'dist/css',
 		img: 'dist/img'
 	},
 	karmaConf: __dirname + '/karma.conf.js'
@@ -31,42 +30,50 @@ var handleError = function(err) {
 	this.emit('end');
 };
 
+gulp.task('browserify', function(){
+	return gulp.src(paths.src.js + '/app.js')
+		.pipe(browserify({
+			insertGlobals: true
+		}))
+		.pipe(source('app.bundled.js'))
+		.pipe(gulp.dest(paths.src.js));
+});
+
 gulp.task('javascript', function() {
-	gulp.src([
-		'assets/js/app.js'
-	])
-	.pipe(concat('app.min.js'))
-	.pipe(uglify())
-	.on('error', handleError)
-	.pipe(gulp.dest('assets/js'));
+	return gulp.src([
+			paths.src.js + '/app.bundled.js'
+		])
+		.pipe(uglify({
+			beautify: true
+		}))
+		.on('error', handleError)
+		.pipe(gulp.dest(paths.dist.js));
 });
 
 gulp.task('lint', function() {
-    gulp.src('assets/js/app.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter(stylish));
+    return gulp.src(paths.src.js + '/app.bundled.js')
+	    .pipe(jshint())
+	    .pipe(jshint.reporter(stylish));
 });
 
 gulp.task('image', function() {
-	gulp.src('assets/img/src/*')
-	.pipe(image())
-	.on('error', handleError)
-	.pipe(gulp.dest('assets/img/prod'));
+	return gulp.src(paths.img.src + '/**/*')
+		.pipe(image())
+		.on('error', handleError)
+		.pipe(gulp.dest(paths.dist.img));
 });
 
 gulp.task('compass', function() {
-	gulp.src([
-		'assets/scss/app.scss'
-	])
-	.pipe(compass({
-		css: 'assets/css',
-		sass: 'assets/scss',
-		image: 'assets/img/dist',
-		require: ['breakpoint']
-	}))
-	.on('error', handleError)
-	.pipe(minifyCSS())
-	.pipe(gulp.dest('assets/css'));
+	return gulp.src(paths.src.scss + '/app.scss')
+		.pipe(compass({
+			css: paths.dist.css,
+			sass: paths.src.scss,
+			image: paths.dist.img,
+			require: ['breakpoint']
+		}))
+		.on('error', handleError)
+		.pipe(minifyCSS())
+		.pipe(gulp.dest(paths.dist.css));
 });
 
 gulp.task('test', function(done){
@@ -77,9 +84,9 @@ gulp.task('test', function(done){
 });
 
 gulp.task('watch', function() {
-	gulp.watch('assets/img/src/*', ['image']);
-	gulp.watch('assets/scss/**/*.scss', ['compass']);
-	gulp.watch('assets/js/**/*.js', ['lint', 'javascript']);
+	gulp.watch(paths.src.img + '/**/*', ['image']);
+	gulp.watch(paths.src.scss + '/**/*.scss', ['compass']);
+	gulp.watch(paths.src.js + '/**/*.js', ['browserify', 'lint', 'javascript']);
 });
 
-gulp.task('default', ['compass', 'image', 'lint', 'javascript', 'watch']);
+gulp.task('default', ['compass', 'image', 'browserify', 'lint', 'javascript', 'watch']);
