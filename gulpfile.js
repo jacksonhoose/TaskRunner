@@ -12,7 +12,7 @@ var browserify = require('gulp-browserify');
 
 var paths = {
 	src: {
-		bower: 'src/js/bower_components',
+		bower: 'src/bower_components',
 		js: 'src/js',
 		scss: 'src/scss',
 		img: 'src/img'
