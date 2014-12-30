@@ -8,7 +8,6 @@ var compass = require('gulp-compass');
 var minifyCSS = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
-var browserify = require('gulp-browserify');
 var rename = require('gulp-rename');
 
 var paths = {
@@ -40,8 +39,9 @@ gulp.task('browserify', function(){
 
 gulp.task('javascript', function() {
 	return gulp.src([
-			paths.src.js + '/app.bundled.js'
+			paths.src.js + '/app.js'
 		])
+		.pipe(concat('app.min.js'))
 		.pipe(uglify({
 			beautify: true
 		}))
@@ -85,7 +85,7 @@ gulp.task('test', function(done){
 gulp.task('watch', function() {
 	gulp.watch(paths.src.img + '/**/*', ['image']);
 	gulp.watch(paths.src.scss + '/**/*.scss', ['compass']);
-	gulp.watch(paths.src.js + '/**/*.js', ['browserify', 'lint', 'javascript']);
+	gulp.watch(paths.src.js + '/**/*.js', ['lint', 'javascript']);
 });
 
-gulp.task('default', ['compass', 'image', 'browserify', 'lint', 'javascript', 'watch']);
+gulp.task('default', ['compass', 'image', 'lint', 'javascript', 'watch']);
